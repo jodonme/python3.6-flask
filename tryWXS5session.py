@@ -49,7 +49,7 @@ mySessionID='test'
 conn = sqlite3.connect(sqlite_file)
 c = conn.cursor()
 
-c.execute("UPDATE {tn} SET {cn}=(1) WHERE {idf}=('test')".\
+c.execute("UPDATE {tn} SET {cn}=(101) WHERE {idf}=('test')".\
         format(tn=table_name, cn=id_column, idf=new_column1))
 
 c.execute('SELECT ({coi}) FROM {tn} WHERE {cn}="test"'.\
