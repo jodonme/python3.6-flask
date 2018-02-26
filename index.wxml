@@ -1,0 +1,119 @@
+<template name="msgItem">
+  <view wx:for="{{contents}}" style="display:inline-block;padding:5rpx;line-height: 45rpx;">
+  <!-- line-height: 55rpx; -->
+  <!-- white-space:pre-line; -->
+    <text wx:if="item.type=='text'" style="padding:0;margin:0rpx;width:auto;" selectable>{{item.text}}</text>
+    <!-- <image wx:if="item.type=='image'" style="width:42rpx;height:42rpx;vertical-align:middle;margin:0 6rpx;" src="{{item.url}}"></image> -->
+  </view>
+</template>
+<scroll-view scroll-y style="height:{{scrollHeight}}rpx;background-image:url('http://118.244.196.11:8008/static/images/yuyin_bg.png')" scroll-into-view="{{toView}}">
+<!-- url('../../images/yuyin_bg.png') -->
+<!-- background:url('http://118.244.196.11:8008/static/yuyin_bg.png') -->
+<!-- 进度条 -->
+<view style="position:fixed; width:100%;  ">
+<progress percent="{{jinduchang}}" stroke-width="12" color="#00FFFF" backgroundColor="#FFFFFF" active active-mode="forwards"/>
+</view>
+
+<!-- 宝箱 -->
+<view wx:if="{{baoxiangallshow}}">
+<!-- style='display:none' -->
+<image src='/images/overlay.png' style='position:fixed; width:100%;height:100%'></image>
+<image  wx:if="{{!baoxiangshow}}" class="baoxiang" src='/images/baoxiang.gif'></image>
+<image wx:if="{{baoxiangshow}}" class="baoxiang1" src='/images/baoxiang1.gif' bindtap='baoxiangtap'></image>
+</view>
+<!-- 视频 -->
+<view class="section tc" wx:if="{{shipinshowup}}">
+<!-- style='display:none' -->
+<video id="myVideo" src="{{src}}" muted='{{mute}}' autoplay='{{auto}}'controls="{{false}}" style='width:375px' ></video>
+<!-- 配音按钮 -->
+<view id="anniu" style="text-align: center;z-index: 999999;width: auto;" >
+  <button style='margin:20rpx' bindtap="peiyinbofang" id="peiyinbofang" class="button button-primary button-large button-box" onclick="go2()">播放</button>
+  <button style='margin:20rpx' bindtap="peiyinluyin" id="peiyinluyin" type="button" class="button button-caution button-large button-box" onclick="go1()">录音</button>
+  <button style='margin:20rpx' id="huifang" type="button" class="button button-action button-large button-box"  bindtap="huifang">回放</button>
+  <button style='margin:20rpx' bindtap="nextButton" id="nextButton" class="button button-highlight button-large button-box" >Next</button>
+</view>
+<view style='width:700rpx;text-align: center;padding-left:30rpx'><text style='color:#fdfefe;'>{{peiyinwenzi}}</text></view>
+<!-- padding-left:50rpx -->
+</view> 
+<!-- 占位 -->
+<view style='height:35rpx;'></view>
+
+  <block wx:if="{{speakboxshow}}">
+  <view wx:for="{{messages}}" wx:for-item="i">
+    <view id="{{i.id}}" class="padding clearfix" wx:if="{{i.me}}">
+      <image class="right-Avatar padding_half" src="{{i.avatar}}"></image>
+      <view class="right-Triangle"></view>
+      <view class="right-speech-message padding_half" style='width:300rpx;height:68rpx;' wx:if="{{i.speech}}" data-filePath="{{i.filePath}}" bindtap="playSpeech">
+        <view style="display:inline-block;">
+          <!-- <image style="width:52rpx;height:42rpx;vertical-align:middle;margin:0 6rpx;" src="{{playingSpeech==i.filePath?speechIcon:defaultSpeechIcon}}"></image>  -->
+          <!-- {{i.seconds}} -->
+          <text style="padding:0;margin:10rpx;width:auto;">xxxxxxxxxxxxxxxxx</text>
+          
+          
+        </view>
+      </view>
+      <view class="right-message padding_half" wx:if="{{!i.speech}}">
+        <template is="msgItem" data="{{...i}}" />
+      </view>
+    </view>
+
+    <view wx:if="{{i.imgshow}}">
+    <view id="{{i.id}}" class="padding clearfix" wx:if="{{!i.me}}">
+      <image class="left-Avatar padding_half" src="{{i.avatar}}"></image>
+      <view class="left-Triangle"></view>
+      <view class="left-speech-message padding_half" wx:if="{{i.speech}}" data-filePath="{{i.filePath}}" style='width:500rpx;height:300rpx;' bindtap="playRobotSpeech">
+        <view style="display:inline-block;">
+          <image style="width:500rpx;height:300rpx;vertical-align:middle;margin:0 0rpx;" src="{{i.jiaoxueimg}}" mode='scaleToFill'></image> 
+        </view>
+      </view>
+      <!-- <view class="left-message padding_half" wx:if="{{!i.speech}}">
+        <template is="msgItem" data="{{...i}}" />
+      </view> -->
+    </view>
+    </view>
+
+
+    <view wx:if="{{i.textshow}}">
+    <view id="{{i.id}}" class="padding clearfix" wx:if="{{!i.me}}">
+      <image class="left-Avatar padding_half" src="{{i.avatar}}"></image>
+      <view class="left-Triangle"></view>
+      <!-- <view class="left-speech-message padding_half" wx:if="{{!i.speech}}" data-filePath="{{i.filePath}}" bindtap="playRobotSpeech">
+        <view style="display:inline-block;">
+          <image style="width:52rpx;height:42rpx;vertical-align:middle;margin:0 6rpx;" src="{{playingSpeech==i.filePath?speechIcon:defaultSpeechIcon}}"></image> {{i.seconds}}″
+        </view>
+      </view> -->
+      <view class="left-message padding_half" wx:if="{{i.speech}}" style="width:450rpx;">
+        <template is="msgItem" data="{{...i}}" />
+      </view>
+    </view>
+    </view>
+
+
+  </view>
+  </block>
+
+
+  <view class="weui-icon_success"></view>
+</scroll-view>
+
+<audio src="http://118.244.196.11:8008/static/Q15Sorry%20i%20did%20not%20get%20you.mp3" id="myAudio" controls loop hidden='true' autoplay></audio>
+
+
+<view class="wa-row" style="height:100rpx;" wx:if="{{footershow}}">
+  <image src="{{changeImageUrl}}" class="text-center icon ion-ios" style="height:32px;line-height:32px" bindtap="changeType"></image>
+  <!-- <view wx:if="{{!isSpeech}}" class="padding_half" style="flex:1; height:60rpx; line-height:60rpx;border-bottom:1px solid gray;">
+    <input value="{{msg}}" bindinput="sendMessage" />
+  </view> -->
+  <view class="padding_half" style="flex:1; height:60rpx; line-height:60rpx;">
+   <!-- wx:if="{{isSpeech}}" -->
+    <button class="speech-button" hover-class='button-hover' hover-start-time="0" bindtap="startmyrecord">{{speechText}}</button> 
+    <!-- bindtouchstart="startRecord" bindtouchend="stopRecord" -->
+  </view>
+  <!-- <image src="{{emotionIcon}}" class="text-center icon ion-ios" style="height:64rpx;line-height:64rpx" bindtap="emotionBtn"></image> -->
+  <button style='color: #436EEE'   size='mini' class="send-button" bindtap="sendmyrecord">发送</button>
+  <!-- disabled="{{isSpeech||msg==''}}" -->
+  <!-- type="primary" -->
+</view>
+<view id="emotionPanel" wx:if="{{emotionBox}}">
+  <image wx:for="{{ emotions }}" src="{{item.src}}" class="emotion" data-name="{{item.name}}" bindtap="chooseEmotion"></image>
+</view>

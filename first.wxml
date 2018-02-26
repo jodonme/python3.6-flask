@@ -1,0 +1,76 @@
+<template name="msgItem">
+  <view wx:for="{{contents}}" style="display:inline-block;padding:5rpx;line-height: 45rpx;">
+  <!-- line-height: 55rpx; -->
+  <!-- white-space:pre-line; -->
+    <text wx:if="item.type=='text'" style="padding:0;margin:0rpx;width:auto;" selectable>{{item.text}}</text>
+    <!-- <image wx:if="item.type=='image'" style="width:42rpx;height:42rpx;vertical-align:middle;margin:0 6rpx;" src="{{item.url}}"></image> -->
+  </view>
+</template>
+<scroll-view scroll-y style="height:{{scrollHeight}}rpx;background-image:url('http://118.244.196.11:8008/static/images/yuyin_bg.png')" scroll-into-view="{{toView}}">
+
+<button style='position:fixed; width:60%; margin-left: 20%;margin-top: 80%;' bindtap='kaishike'>点击开始外教课</button>
+
+<view class="section" style='position:fixed;  margin-left: 20%;margin-top: 60%;width 60%'>
+  <input placeholder="请输入你的英文名" auto-focus bindinput='nameinput' style='text-align:center;border: 1px solid lightgray;border-radius: 5px;padding:15rpx;'/>
+</view>
+
+  <block>
+  <view wx:for="{{messages}}" wx:for-item="i">
+    <view id="{{i.id}}" class="padding clearfix" wx:if="{{i.me}}">
+      <image class="right-Avatar padding_half" src="{{i.avatar}}"></image>
+      <view class="right-Triangle"></view>
+      <view class="right-speech-message padding_half" style='width:300rpx;height:68rpx;' wx:if="{{i.speech}}" data-filePath="{{i.filePath}}" bindtap="playSpeech">
+        <view style="display:inline-block;">
+          <!-- <image style="width:52rpx;height:42rpx;vertical-align:middle;margin:0 6rpx;" src="{{playingSpeech==i.filePath?speechIcon:defaultSpeechIcon}}"></image>  -->
+          <!-- {{i.seconds}} -->
+          <text style="padding:0;margin:10rpx;width:auto;">xxxxxxxxxxxxxxxxx</text>
+          
+          
+        </view>
+      </view>
+      <view class="right-message padding_half" wx:if="{{!i.speech}}">
+        <template is="msgItem" data="{{...i}}" />
+      </view>
+    </view>
+
+    <view wx:if="{{i.imgshow}}">
+    <view id="{{i.id}}" class="padding clearfix" wx:if="{{!i.me}}">
+      <image class="left-Avatar padding_half" src="{{i.avatar}}"></image>
+      <view class="left-Triangle"></view>
+      <view class="left-speech-message padding_half" wx:if="{{i.speech}}" data-filePath="{{i.filePath}}" style='width:500rpx;height:300rpx;' bindtap="playRobotSpeech">
+        <view style="display:inline-block;">
+          <image style="width:500rpx;height:300rpx;vertical-align:middle;margin:0 0rpx;" src="{{i.jiaoxueimg}}" mode='scaleToFill'></image> 
+        </view>
+      </view>
+      <!-- <view class="left-message padding_half" wx:if="{{!i.speech}}">
+        <template is="msgItem" data="{{...i}}" />
+      </view> -->
+    </view>
+    </view>
+
+
+    <view wx:if="{{i.textshow}}">
+    <view id="{{i.id}}" class="padding clearfix" wx:if="{{!i.me}}">
+      <image class="left-Avatar padding_half" src="{{i.avatar}}"></image>
+      <view class="left-Triangle"></view>
+      <!-- <view class="left-speech-message padding_half" wx:if="{{!i.speech}}" data-filePath="{{i.filePath}}" bindtap="playRobotSpeech">
+        <view style="display:inline-block;">
+          <image style="width:52rpx;height:42rpx;vertical-align:middle;margin:0 6rpx;" src="{{playingSpeech==i.filePath?speechIcon:defaultSpeechIcon}}"></image> {{i.seconds}}″
+        </view>
+      </view> -->
+      <view class="left-message padding_half" wx:if="{{i.speech}}" style="width:450rpx;">
+        <template is="msgItem" data="{{...i}}" />
+      </view>
+    </view>
+    </view>
+
+
+  </view>
+  </block>
+
+
+  <view class="weui-icon_success"></view>
+</scroll-view>
+
+<audio src="http://118.244.196.11:8008/static/Q15Sorry%20i%20did%20not%20get%20you.mp3" id="myAudio" controls loop hidden='true' autoplay></audio>
+

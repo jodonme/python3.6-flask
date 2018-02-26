@@ -1,0 +1,15 @@
+<view wx:if="{{starshow}}">
+<image src='/images/overlay.png' style='position:fixed; width:100%;height:100%'></image>
+<cover-image class='star' src='/images/3star.png'></cover-image>
+</view>
+<view style='background-color:#FFFFAA'>
+<image class='defen' src='/images/defen.png' mode="widthFix"></image>
+
+<video id="defenVideo" src="http://118.244.196.11:8008/static/iceall.mp4"  controls='false' style='width:375px;' muted='true'></video>
+<view style="text-align: center;width: auto;" >
+<button class="button button-rounded button-primary" style='margin-right:12px' bindtap='bofangshipin'>回放视频</button>
+<button class="button button-rounded button-caution" bindtap='jieshukecheng' >结束课程</button>
+</view>
+</view>
+
+
